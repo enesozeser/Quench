@@ -3,7 +3,6 @@ import sys
 import getopt
 
 def main(argv):
-
    help = """Usage: quench -i, --ip <IP Address> -p, --port <Port Number> -t, --type <Payload Type>\nPayload Types: sh, pl, py, socat, php, rb, nc, go, awk, lua"""
    ip = ''
    port = ''
@@ -20,7 +19,6 @@ def main(argv):
         ip = arg
       elif opt in ("-p", "--port"):
         port = arg
-
       if opt in ("-t", "--type"):
         type = arg
         if type == "sh":
