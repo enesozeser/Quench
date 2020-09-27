@@ -10,4 +10,3 @@ apt install python3 -y
 sleep 5
 printf "${YELLOW}Quench has been installed. Use '${GREEN}quench -h${YELLOW}' command for all information.\n"
 printf "${NC}"
-
