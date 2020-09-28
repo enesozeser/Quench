@@ -8,6 +8,9 @@ def main(argv):
    port = ''
    type = ''
 
+   if len(sys.argv) == 1:
+    print(help)
+
    try:
       opts, args = getopt.getopt(argv,"i:p:t:",["ip=","port=","type="])
    except getopt.GetoptError:
@@ -19,6 +22,7 @@ def main(argv):
         ip = arg
       elif opt in ("-p", "--port"):
         port = arg
+
       if opt in ("-t", "--type"):
         type = arg
         if type == "sh":
