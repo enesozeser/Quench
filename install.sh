@@ -1,12 +1,9 @@
 #!/bin/bash
-YELLOW='\033[0;33m'
-GREEN='\033[0;32m'
-NC='\033[0m'
+wget https://raw.githubusercontent.com/enesozeser/Quench/master/quench.py
 mv quench.py quench
 chmod a+x quench
 cp quench /usr/local/bin/
 mv quench quench.py
-apt install python3 -y
-sleep 5
-printf "${YELLOW}Quench has been installed. Use '${GREEN}quench${YELLOW}' command for all information.\n"
-printf "${NC}"
+apt update && apt install python3 -y
+sleep 2
+echo "Quench has been installed. Use 'quench' command for all information."
