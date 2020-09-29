@@ -1,5 +1,4 @@
 #!/bin/bash
-wget https://raw.githubusercontent.com/enesozeser/Quench/master/quench.py
 mv quench.py quench
 chmod a+x quench
 cp quench /usr/local/bin/
