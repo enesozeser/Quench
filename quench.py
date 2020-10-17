@@ -1,32 +1,61 @@
 #!/usr/bin/python3
+import os
 import sys
 import getopt
 import subprocess
+import requests
 
 def main(argv):
-   help = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  Lua ==> lua"""
+   global ipaddress
+   info = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\n  --update ==> Update The Latest Version\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\n  quench --update\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  Lua ==> lua"""
    ip = ''
    port = ''
-   type = ''
-   getipv4 = subprocess.Popen("hostname -I | awk '{print $1}'", shell=True, stdout=subprocess.PIPE).stdout
-   ipv4 = getipv4.read()
+   url = "https://enesozeser.com/"
+   timeout = 5
+   try:
+       request = requests.get(url, timeout=timeout)
+       internet = 1
+   except (requests.ConnectionError, requests.Timeout) as exception:
+       internet = 0
+
+   if internet == 1:
+     getpublic = subprocess.Popen("dig +short myip.opendns.com @resolver1.opendns.com", shell=True, stdout=subprocess.PIPE).stdout
+     public = getpublic.read()
+     getlocal = subprocess.Popen("hostname -I | awk '{print $1}'", shell=True, stdout=subprocess.PIPE).stdout
+     local = getlocal.read()
+     ipaddress = """IP Address:\n  Local IP Address ==> %s\n  Public IP Address ==> %s""" %(local[:-1].decode(), public[:-1].decode())
    
    if len(sys.argv) == 1:
-    print(help)
-    print("  Your IPv4 Address ==>", ipv4[:-1].decode())
-      
+    print(info)
+    if internet == 1:
+      print(ipaddress)
+
    try:
-      opts, args = getopt.getopt(argv,"i:p:t:",["ip=","port=","type="])
+      opts, args = getopt.getopt(argv,"i:p:t:update",["ip=","port=","type=","update"])
    except getopt.GetoptError:
-      print(help)
-      print("  Your IPv4 Address ==>", ipv4[:-1].decode())
+      print(info)
+      if internet == 1:
+        print(ipaddress)
       sys.exit(2)
 
    for opt, arg in opts:
       if opt in ("-i", "--ip"):
         ip = arg
+
       elif opt in ("-p", "--port"):
         port = arg
+
+      elif opt in "--update":
+          if internet == 1:
+              os.system('rm -f quench && rm -f quench.py')
+              os.system('wget https://raw.githubusercontent.com/enesozeser/Quench/master/quench.py')
+              os.system('mv quench.py quench')
+              os.system('chmod a+x quench')
+              os.system('rm -f /usr/local/bin/quench && mv quench /usr/local/bin/')
+              os.system('sleep 2')
+              os.system('''echo "Quench is updated. Use 'quench' command for all information."''')
+          else:
+              print("Quench could not be updated. Check your internet connection.")
 
       if opt in ("-t", "--type"):
         type = arg
