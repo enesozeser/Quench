@@ -7,15 +7,15 @@ import requests
 
 def main(argv):
    global ipaddress
-   info = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\n  --update ==> Update The Latest Version\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\n  quench --update\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  Lua ==> lua"""
+   info = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\n  --update ==> Update To The Latest Version\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\n  quench --update\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  Lua ==> lua"""
    ip = ''
    port = ''
    url = "https://enesozeser.com/"
    timeout = 5
    try:
-       request = requests.get(url, timeout=timeout)
+       requests.get(url, timeout=timeout)
        internet = 1
-   except (requests.ConnectionError, requests.Timeout) as exception:
+   except (requests.ConnectionError, requests.Timeout):
        internet = 0
 
    if internet == 1:
@@ -31,7 +31,7 @@ def main(argv):
       print(ipaddress)
 
    try:
-      opts, args = getopt.getopt(argv,"i:p:t:update",["ip=","port=","type=","update"])
+      opts, args = getopt.getopt(argv,"i:p:t:",["ip=","port=","type=","update"])
    except getopt.GetoptError:
       print(info)
       if internet == 1:
