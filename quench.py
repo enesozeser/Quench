@@ -4,12 +4,14 @@ import sys
 import getopt
 import subprocess
 import requests
+import pathlib
 
 def main(argv):
    global ipaddress
    info = """Arguments:\n  -i, --ip ==> IP Address\n  -p, --port ==> Port Number\n  -t, --type ==> Payload Type\n  --update ==> Update To The Latest Version\n  --install ==> Install To '/usr/local/bin/' Directory\nUsage:\n  quench -i <IP Address> -p <Port Number> -t <Payload Type>\n  quench -i 127.0.0.1 -p 4444 -t php\n  quench --ip 192.168.1.1 --port 1337 --type awk\n  quench --update\n  quench --install\nPayload Types:\n  Bash ==> sh\n  Perl ==> pl\n  Python ==> py\n  Socat ==> sc\n  PHP ==> php\n  Ruby ==> rb\n  Netcat ==> nc\n  Golang ==> go\n  AWK ==> awk\n  Lua ==> lua"""
    ip = ''
    port = ''
+   file = pathlib.Path("/usr/local/bin/quench")
    url = "https://enesozeser.com/"
    timeout = 5
    try:
@@ -46,23 +48,29 @@ def main(argv):
         port = arg
 
       elif opt in "--update":
-          if internet == 1:
-              os.system('rm -f /usr/local/bin/quench')
-              os.system('wget https://raw.githubusercontent.com/enesozeser/Quench/master/quench.py -P /usr/local/bin/')
+        if internet == 1:
+           if file.exists():
+               os.system('rm -f /usr/local/bin/quench')
+               os.system('wget https://raw.githubusercontent.com/enesozeser/Quench/master/quench.py -P /usr/local/bin/')
+               os.system('mv /usr/local/bin/quench.py /usr/local/bin/quench')
+               os.system('chmod a+x /usr/local/bin/quench')
+               os.system('sleep 2')
+               print("Quench is updated. Use 'quench' command for all information.")
+           else:
+               print("Quench is not installed. Use './quench --install' command before updating.")
+        else:
+            print("Quench could not be updated. Check your internet connection.")
+               
+      elif opt in "--install":
+          if file.exists():
+              print("Quench is already installed. Use 'quench' command for all information.")
+          else:
+              os.system('cp quench.py /usr/local/bin/')
               os.system('mv /usr/local/bin/quench.py /usr/local/bin/quench')
               os.system('chmod a+x /usr/local/bin/quench')
               os.system('sleep 2')
-              os.system('''echo "Quench is updated. Use 'quench' command for all information."''')
-          else:
-              print("Quench could not be updated. Check your internet connection.")
-               
-      elif opt in "--install":
-        os.system('cp quench.py /usr/local/bin/')
-        os.system('mv /usr/local/bin/quench.py /usr/local/bin/quench')
-        os.system('chmod a+x /usr/local/bin/quench')
-        os.system('sleep 2')
-        os.system('''echo "Quench is installed. Use 'quench' command for all information."''')
-         
+              print("Quench is installed. Use 'quench' command for all information.")
+
       if opt in ("-t", "--type"):
         type = arg
         if type == "sh":
