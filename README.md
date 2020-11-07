@@ -1,4 +1,5 @@
-- ***Quench is a reverse shell payload generator for penetration testers. It developed to automate the process of generating various reverse shell payloads.***
+## Quench - The Reverse Shell Payload Generator
+- Quench is a reverse shell payload generator for penetration testers. It developed to automate the process of generating various reverse shell payloads.
 
 ## Payload Types
 - Bash
