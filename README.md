@@ -15,6 +15,7 @@
 - Golang
 - AWK
 - Lua
+- PowerShell
 
 ## Installation
 ```
