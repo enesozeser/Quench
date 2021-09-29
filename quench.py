@@ -19,7 +19,7 @@ def main(argv):
        internet = 1
    except (requests.ConnectionError, requests.Timeout):
        internet = 0
-
+ 
    if internet == 1:
      getpublic = subprocess.Popen("dig +short myip.opendns.com @resolver1.opendns.com", shell=True, stdout=subprocess.PIPE).stdout
      public = getpublic.read()
